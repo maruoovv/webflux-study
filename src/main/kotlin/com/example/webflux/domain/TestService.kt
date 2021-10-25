@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Scheduler
 import reactor.core.scheduler.Schedulers
+import java.time.LocalDateTime
 
 @Service
 class TestService(
@@ -26,6 +27,7 @@ class TestService(
                     logger.info { "result $it" }
                 }
                 .doOnError { logger.error { "error $it" } }
+                .onErrorReturn("ERROR")
     }
 
 }
