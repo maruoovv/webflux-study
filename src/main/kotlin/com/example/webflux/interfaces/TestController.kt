@@ -18,9 +18,14 @@ class TestController(
     private val logger = KotlinLogging.logger {  }
 
     @GetMapping
-    fun httpGet(): Mono<String> {
-        MDC.put("thread", "${Thread.currentThread().name} + ${LocalDateTime.now()}")
+    fun httpGet(cnt : Int): Mono<String> {
+        val thread = "param : $cnt, ${Thread.currentThread().name}, ${LocalDateTime.now()}"
         return testService.httpGet()
+                .flatMap {
+                    logger.info { "response $it" }
+                    Mono.just(it)
+                }
+                .contextWrite { context -> context.put("thread", thread) }
     }
 
 }
